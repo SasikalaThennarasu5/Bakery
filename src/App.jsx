@@ -17,8 +17,6 @@ import OrderSummary from "./pages/OrderSummary";
 import ProductDetails from "./components/ProductDetails";
 import AddAdress from "./components/AddAdress";
 import PaymentOptions from "./components/PaymentOptions";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 function App() {
   return (
