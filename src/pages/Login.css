@@ -1,0 +1,11 @@
+.tab-login {
+  background-color: #e57f35;
+  clip-path: polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%);
+  flex: 1;
+}
+
+.tab-register {
+  border: 2px solid #e57f35;
+  background-color: transparent;
+  flex: 1;
+}
