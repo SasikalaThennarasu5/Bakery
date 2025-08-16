@@ -1,14 +1,18 @@
+import Hero from "../components/Hero";
 import WhyChooseUs from "../components/WhyChooseUs";
 import CommonQuestions from "../components/CommonQuestions";
 import Customers from "../components/Customers";
 import flowerImage from "../assets/images/flowerimage.png";
 import offerImage from "../assets/images/offer.png";
 
+
 export default function Home() {
   return (
     <div className="bg-[#fff8f0] min-h-screen"> {/* Background for whole page */}
-      <h1>Home Page</h1>
+      
+      <Hero />
       <WhyChooseUs />
+
 
       {/* Offers and Deals Section */}
       <div className="text-center my-12">

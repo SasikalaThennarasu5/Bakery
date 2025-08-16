@@ -86,6 +86,21 @@ const Customers = () => {
           <FaArrowRightLong />
         </button>
       </div>
+       
+       {/* Banner at the end */}
+      <div className="flex items-center justify-between  px-6 py-4 mt-16 w-full max-w-5xl rounded-lg shadow-md">
+        <p className="text-lg text-center md:text-2xl font-extrabold text-black">
+          Direct visits chat item available
+        </p>
+        <div className="flex items-center gap-2 cursor-pointer group">
+          <span className="text-sm md:text-base font-semibold text-black">
+            see menu
+          </span>
+          <FaArrowRightLong className="text-black text-lg transform group-hover:translate-x-1 transition-transform" />
+        </div>
+      </div>
+
+
     </section>
   );
 };
