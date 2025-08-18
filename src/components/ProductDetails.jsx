@@ -9,16 +9,18 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   const { addToCart } = useStore();
 
-  // First try to get product info from navigation state
+  // State data from navigation
   const stateData = location.state || {};
   const product = useMemo(() => {
-    if (stateData.productId) {
-      return getProduct(stateData.productId);
+    if (stateData.id) {
+      return getProduct(stateData.id);
     }
     return null;
-  }, [stateData.productId]);
+  }, [stateData.id]);
 
-  const [selectedWeight, setSelectedWeight] = useState(stateData.size || product?.sizes?.[0] || "500 G");
+  const [selectedWeight, setSelectedWeight] = useState(
+    stateData.size || product?.sizes?.[0] || "500 G"
+  );
   const [quantity, setQuantity] = useState(stateData.qty || 1);
   const [pincode, setPincode] = useState("");
 
@@ -36,19 +38,31 @@ const ProductDetails = () => {
 
   const handleAddToCart = () => {
     addToCart({ ...product, chosenSize: selectedWeight }, quantity);
+    navigate("/cart"); // ✅ optional: send user to cart if needed
   };
 
-  const handleProceedToPayment = () => {
-    navigate("/add-address", {
-      state: {
-        productId: product.id,
-        name: product.name,
-        size: selectedWeight,
-        qty: quantity,
-        price: product.price,
-      },
-    });
-  };
+ const handleProceedToPayment = () => {
+  const taxRate = 0.05; // example 5% GST
+  const subtotal = product.price * quantity;
+  const taxAmount = subtotal * taxRate;
+  const total = subtotal + taxAmount;
+
+  navigate(`/payment/${product.id}/add-address`, {
+    state: {
+      type: "single", // ✅ mark as single product buy
+      id: product.id,
+      name: product.name,
+      size: selectedWeight,
+      qty: quantity,
+      price: product.price,
+      subtotal,
+      taxAmount,
+      total,
+      img: product.img,
+    },
+  });
+};
+
 
   return (
     <section className="bg-[#FFF8F0] py-10 px-4 font-[League_Spartan]">
@@ -57,7 +71,7 @@ const ProductDetails = () => {
       </h2>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        {/* Image */}
+        {/* LEFT IMAGE + PINCODE */}
         <div className="space-y-5">
           <img
             src={product.img}
@@ -85,7 +99,7 @@ const ProductDetails = () => {
           </div>
         </div>
 
-        {/* Product Info */}
+        {/* RIGHT PRODUCT INFO */}
         <div>
           <p className="text-sm text-gray-700 mb-2">
             {product.brand || "Cheri bakery"}
@@ -100,7 +114,7 @@ const ProductDetails = () => {
           {/* Price */}
           <div className="mb-6">
             <p className="text-lg font-bold">₹ {product.price}</p>
-            <p className="text-xs text-gray-600">INCL. OF ALL TAXS</p>
+            <p className="text-xs text-gray-600">INCL. OF ALL TAXES</p>
           </div>
 
           {/* Weight Options */}
@@ -159,7 +173,7 @@ const ProductDetails = () => {
               onClick={handleProceedToPayment}
               className="w-full py-2 rounded-full bg-[#e57f35] text-white font-bold hover:brightness-95"
             >
-              PROCEED TO PAYMENT
+              PROCEED TO PAY
             </button>
           </div>
         </div>

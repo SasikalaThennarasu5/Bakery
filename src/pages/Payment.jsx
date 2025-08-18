@@ -1,21 +1,39 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useParams, Outlet } from "react-router-dom";
 import flowerImage from "../assets/images/flowerimage.png";
-import ProductDetails from "../components/ProductDetails";
-import AddAdress from "../components/AddAdress";
-import PaymentOptions from "../components/PaymentOptions";
+import { getProduct } from "../data/products";
 
 export default function Payment() {
-  // Get product data from navigation state
   const location = useLocation();
-  const productData = location.state || {};
+  const { id } = useParams();
+  const [productData, setProductData] = useState(location.state || null);
+
+  useEffect(() => {
+    if (!productData && id) {
+      const fetchedProduct = getProduct(id);
+      if (fetchedProduct) {
+        setProductData({
+          ...fetchedProduct,
+          ...location.state, // merge qty, size, etc
+        });
+      }
+    }
+  }, [id, productData, location.state]);
+
+  if (!productData) {
+    return (
+      <section className="bg-[#FFF8F0] py-10 font-spartan text-center">
+        <h2 className="text-xl text-red-600 font-semibold">
+          Product not found
+        </h2>
+      </section>
+    );
+  }
 
   return (
-    <section className="bg-[#FFF8F0] py-10 font-spartan">
-      {/* Pass product data to components */}
-      <ProductDetails product={productData} />
-      <AddAdress product={productData} />
-      <PaymentOptions product={productData} />
+    <section className="bg-[#FFF8F0] py-10 font-spartan min-h-screen">
+      {/* render nested child route (ProductDetails, AddAddress, etc.) */}
+      <Outlet context={{ product: productData }} />
 
       <div className="flex justify-center my-12">
         <img

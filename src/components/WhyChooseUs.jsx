@@ -64,7 +64,7 @@ const WhyChooseUs = () => {
               </h3>
 
               {/* Text */}
-              <p className="text-gray-950 font-medium  text-lg md:text-2xl mb-6 font-[League Spartan] leading-tight tracking-tight">
+              <p className="text-gray-950 font-extrabold text-2xl md:text-2xl mb-6 font-[League Spartan] leading-tight tracking-tight">
               {item.text}
               </p>
             </div>

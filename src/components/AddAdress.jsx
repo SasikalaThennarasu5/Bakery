@@ -7,13 +7,29 @@ const AddAddress = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Get the product data from ProductDetails.jsx
-  const productData = location.state;
+  // type = "single" (buy now) OR "cart"
+  // incoming = product details OR cart items
+  const { type, ...incoming } = location.state || {};
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Pass along the product data to PaymentOptions.jsx
-    navigate("/payment-options", { state: productData });
+
+    const formData = {
+      name: e.target.name.value,
+      deliveryLocation: e.target.deliveryLocation.value,
+      mobile: e.target.mobile.value,
+      notes: e.target.notes.value,
+      address: e.target.address.value,
+    };
+
+    // Pass product/cart + address details
+    navigate(`/payment/${incoming?.id}/payment-options`,{
+      state: {
+        type: type || "single",
+        ...incoming,
+        addressInfo: formData, // keep grouped for clarity
+      },
+    });
   };
 
   return (
@@ -32,6 +48,7 @@ const AddAddress = () => {
               <label className="block text-sm font-semibold mb-1">NAME*</label>
               <input
                 type="text"
+                name="name"
                 required
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e57f35]"
               />
@@ -39,11 +56,10 @@ const AddAddress = () => {
 
             {/* Delivery Location */}
             <div>
-              <label className="block text-sm font-semibold mb-1">
-                DELIVERY LOCATION*
-              </label>
+              <label className="block text-sm font-semibold mb-1">DELIVERY LOCATION*</label>
               <input
                 type="text"
+                name="deliveryLocation"
                 required
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e57f35]"
               />
@@ -54,6 +70,7 @@ const AddAddress = () => {
               <label className="block text-sm font-semibold mb-1">MOBILE NO*</label>
               <input
                 type="text"
+                name="mobile"
                 required
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e57f35]"
               />
@@ -61,9 +78,10 @@ const AddAddress = () => {
 
             {/* Add Notes */}
             <div>
-              <label className="block text-sm font-semibold mb-1">ADD NOTES*</label>
+              <label className="block text-sm font-semibold mb-1">ADD NOTES</label>
               <input
                 type="text"
+                name="notes"
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#e57f35]"
               />
             </div>
@@ -73,6 +91,7 @@ const AddAddress = () => {
               <label className="block text-sm font-semibold mb-1">ADDRESS*</label>
               <textarea
                 rows="3"
+                name="address"
                 required
                 className="w-full border border-gray-300 rounded-md px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-[#e57f35]"
               ></textarea>

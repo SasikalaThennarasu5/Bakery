@@ -17,28 +17,23 @@ export default function ProductDescription() {
 
   const handleAdd = () => {
     addToCart({ ...product, chosenSize: size }, qty);
+    navigate("/cart"); // redirect to Cart.jsx
   };
 
   const goBuyNow = () => {
-    const taxRate = 0.05; // 5% GST example
-    const subtotal = product.price * qty;
-    const taxAmount = subtotal * taxRate;
-    const total = subtotal + taxAmount;
+  navigate(`/payment/${product.id}/product-details`, {
+    state: {
+      id: product.id,
+      name: product.name,
+      size,
+      qty,
+      price: product.price,
+      img: product.img,
+    },
+  });
+};
 
-    navigate("/payment", {
-      state: {
-        productId: product.id,
-        name: product.name,
-        size,
-        qty,
-        price: product.price,
-        subtotal,
-        taxAmount,
-        total,
-        img: product.img,
-      },
-    });
-  };
+
 
   return (
     <section className="bg-[#FFF8F0] font-[League_Spartan]">
@@ -92,7 +87,7 @@ export default function ProductDescription() {
               {product.name}
             </h1>
 
-            <p className="text-[15px] leading-[1.25rem] font-semibold text-black mb-3">
+            <p className="text-[25px] leading-[1.25rem] font-bold text-black mb-3">
               {product.lead ??
                 "This delectable treat is a heavenly combination of rich, velvety chocolate and a melt-in-your-mouth texture. Whether you’re a chocolate lover or looking to satisfy your sweet tooth, Choco Delight Cake is the perfect choice."}
             </p>

@@ -14,9 +14,12 @@ import Cart from "./pages/Cart";
 import Payment from "./pages/Payment";
 import Contact from "./pages/Contact";
 import OrderSummary from "./pages/OrderSummary";
+
+// nested payment flow components
 import ProductDetails from "./components/ProductDetails";
 import AddAdress from "./components/AddAdress";
 import PaymentOptions from "./components/PaymentOptions";
+import Summary from "./components/Summary";
 
 function App() {
   return (
@@ -30,18 +33,25 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/products/:category" element={<CategoryPage />} />
         <Route path="/product/:id" element={<ProductDescription />} />
+
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/payment" element={<Payment />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/Register" element={<Register />} />
+
+        {/* payment flow with nested routes */}
+        <Route path="/payment/:id" element={<Payment />}>
+          <Route path="product-details" element={<ProductDetails />} />
+          <Route path="add-address" element={<AddAdress />} />
+          <Route path="payment-options" element={<PaymentOptions />} />
+          <Route path="summary" element={<Summary />} />
+        </Route>
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/Blog" element={<Blog />} />
-        <Route path="/product-details" element={<ProductDetails />} />
-        <Route path="/add-address" element={<AddAdress />} />
-        <Route path="/payment-options" element={<PaymentOptions />} />
+        <Route path="/blog" element={<Blog />} />
+
+        {/* keep only one OrderSummary route if needed */}
         <Route path="/order-summary" element={<OrderSummary />} />
-        <Route path="/OrderSummary" element={<OrderSummary />} />
       </Routes>
       <Footer />
     </>

@@ -9,11 +9,17 @@ const PaymentOptions = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ Safely get product details from state
-  const { name = "Unknown Product", size = "-", qty = 1, price = 0 } =
-    location.state || {};
+  // ✅ Extract state safely
+  const {
+    type = "single", // default to single flow
+    cart = [],
+    subtotal = 0,
+    ...rest
+  } = location.state || {};
 
-  // Payment method state
+  const isCartFlow = type === "cart";
+
+  // Payment state
   const [paymentMethod, setPaymentMethod] = useState("");
   const [paymentDetails, setPaymentDetails] = useState({
     upi: "",
@@ -21,52 +27,89 @@ const PaymentOptions = () => {
     card: "",
   });
 
-  // ✅ Dynamic cart details calculation
-  const cart = useMemo(() => {
+  // ✅ Build cart/summary dynamically
+  const cartSummary = useMemo(() => {
     const discountPercent = 15;
     const deliveryFee = 40;
     const gstPercent = 5;
 
-    const basePrice = price * qty;
-    const discountAmount = (basePrice * discountPercent) / 100;
-    const gstAmount = ((basePrice - discountAmount) * gstPercent) / 100;
-    const totalAmount =
-      basePrice - discountAmount + deliveryFee + gstAmount;
+    if (isCartFlow) {
+      const basePrice = subtotal || 0;
+      const discountAmount = (basePrice * discountPercent) / 100;
+      const gstAmount = ((basePrice - discountAmount) * gstPercent) / 100;
+      const totalAmount = basePrice - discountAmount + deliveryFee + gstAmount;
 
-    return {
-      productName: name,
-      quantity: `${qty} × ${size}`,
-      price: basePrice,
-      discountPercent,
-      discountAmount,
-      deliveryFee,
-      gstPercent,
-      gstAmount,
-      totalAmount,
-    };
-  }, [name, size, qty, price]);
+      return {
+        items: cart,
+        price: basePrice,
+        discountPercent,
+        discountAmount,
+        deliveryFee,
+        gstPercent,
+        gstAmount,
+        totalAmount,
+      };
+    } else {
+      const {
+        name = "Unknown Product",
+        size = "-",
+        qty = 1,
+        price = 0,
+        img = "",
+        productId = "",
+      } = rest;
 
-  // ✅ Payment submit handler
-  const handlePayNow = () => {
-    if (!paymentMethod) {
-      alert("Please select a payment method.");
-      return;
+      const basePrice = price * qty;
+      const discountAmount = (basePrice * discountPercent) / 100;
+      const gstAmount = ((basePrice - discountAmount) * gstPercent) / 100;
+      const totalAmount = basePrice - discountAmount + deliveryFee + gstAmount;
+
+      return {
+        items: [{ productId, name, size, qty, price, img }],
+        price: basePrice,
+        discountPercent,
+        discountAmount,
+        deliveryFee,
+        gstPercent,
+        gstAmount,
+        totalAmount,
+      };
     }
-    if (!paymentDetails[paymentMethod]) {
-      alert(`Please enter your ${paymentMethod} ID.`);
-      return;
-    }
+  }, [isCartFlow, cart, subtotal, rest]);
 
-    navigate("/order-summary", {
-      state: {
-        cart,
-        paymentMethod,
-        totalAmount: cart.totalAmount,
-        orderId: `DRF${Math.random().toString(36).substring(2, 12).toUpperCase()}`,
-        placedAt: new Date(),
+  // ✅ Handle payment & navigate to summary
+  // ✅ Handle payment & navigate to summary
+const handlePayNow = () => {
+  if (!paymentMethod) {
+    alert("Please select a payment method.");
+    return;
+  }
+  if (!paymentDetails[paymentMethod]) {
+    alert(`Please enter your ${paymentMethod.toUpperCase()} details.`);
+    return;
+  }
+
+  navigate("/order-summary", {
+    state: {
+      type,
+      items: cartSummary.items,  // ✅ Array of ordered products
+      cartSummary,               // ✅ Price, gst, discount, total
+      paymentMethod,
+      paymentId: paymentDetails[paymentMethod],
+      totalAmount: cartSummary.totalAmount,
+      address: {
+        name: rest.name,
+        mobile: rest.mobile,
+        address: rest.address,
+        notes: rest.notes,
+        location: rest.location,
       },
-    });
-  };
+      orderId: `DRF${Math.random().toString(36).substring(2, 12).toUpperCase()}`,
+      placedAt: new Date(),
+    },
+  });
+};
+
 
   return (
     <div className="bg-[#FFF8F0] min-h-screen font-[League_Spartan] flex flex-col items-center px-4 py-8">
@@ -155,30 +198,36 @@ const PaymentOptions = () => {
 
       {/* Order Summary */}
       <div className="w-full max-w-lg mt-8 space-y-2 text-sm md:text-base">
-        <div className="flex justify-between">
-          <span>QUANTITY</span>
-          <span>{cart.quantity}</span>
-        </div>
+        {cartSummary.items.map((item, idx) => (
+          <div key={idx} className="flex justify-between">
+            <span>
+              {item.qty} × {item.name} ({item.size})
+            </span>
+            <span>₹{item.price * item.qty}</span>
+          </div>
+        ))}
+
+        <hr className="my-2 border-gray-400" />
         <div className="flex justify-between">
           <span>TOTAL PRODUCT PRICE</span>
-          <span>+₹{cart.price}</span>
+          <span>+₹{cartSummary.price}</span>
         </div>
         <div className="flex justify-between">
-          <span>DISCOUNT AMOUNT {cart.discountPercent}%</span>
-          <span>-₹{cart.discountAmount}</span>
+          <span>DISCOUNT AMOUNT {cartSummary.discountPercent}%</span>
+          <span>-₹{cartSummary.discountAmount}</span>
         </div>
         <div className="flex justify-between">
           <span>DELIVERY FEE</span>
-          <span>+₹{cart.deliveryFee}</span>
+          <span>+₹{cartSummary.deliveryFee}</span>
         </div>
         <div className="flex justify-between">
-          <span>INCL. GST {cart.gstPercent}%</span>
-          <span>+₹{cart.gstAmount}</span>
+          <span>INCL. GST {cartSummary.gstPercent}%</span>
+          <span>+₹{cartSummary.gstAmount}</span>
         </div>
         <hr className="my-2 border-gray-400" />
         <div className="flex justify-between font-bold text-lg">
           <span>TOTAL PRICE AMOUNT</span>
-          <span>₹{cart.totalAmount}</span>
+          <span>₹{cartSummary.totalAmount}</span>
         </div>
       </div>
 

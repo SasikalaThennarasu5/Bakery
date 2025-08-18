@@ -12,7 +12,7 @@ export default function VisitUs() {
         <h2 className="text-[#e57f35] text-2xl md:text-3xl font-bold mb-3">
           MEET THE BAKERY
         </h2>
-        <p className="text-base md:text-2xl font-medium text-gray-950 max-w-6xl mx-auto leading-tight">
+        <p className="text-base md:text-4xl font-medium text-gray-950 max-w-6xl mx-auto leading-tight">
           Our team is made up of passionate bakers who bring skill, creativity,
           and care to every product. From our Head Baker to our pastry chefs,
           everyone shares a commitment to quality and customer happiness.
@@ -26,7 +26,7 @@ export default function VisitUs() {
 
       <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
         {/* Left Text */}
-        <div className="flex-1 text-base md:text-3xl font-medium text-gray-950 max-w-4xl mx-auto leading-tight">
+        <div className="flex-1 text-base md:text-4xl font-medium text-gray-950 max-w-4xl mx-auto leading-tight">
           <p className="mb-6">
             We’re severing smiles across Tamil Nadu with many franchise
             location!

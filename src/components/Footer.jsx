@@ -15,14 +15,13 @@ const Footer = () => {
         
         {/* Logo */}
         <div>
-          <img src={logofoot} alt="Cherii Logo" className="h-34 mb-3" />
-          
+          <img src={logofoot} alt="Cherii Logo" className="h-[136px] mb-3" />
         </div>
 
         {/* Quick Links */}
         <div>
-          <h3 className="font-bold mb-3 text-2xl">Quick Links</h3>
-          <ul className="space-y-2 text-2xl ">
+          <h3 className="font-bold mb-3 text-2xl md:text-3xl">Quick Links</h3>
+          <ul className="space-y-2 font-medium text-lg md:text-xl">
             <li><a href="#">Track Your Order</a></li>
             <li><a href="#">Privacy Policy</a></li>
             <li><a href="#">Refund & Cancellation Policy</a></li>
@@ -33,8 +32,8 @@ const Footer = () => {
 
         {/* Shop */}
         <div>
-          <h3 className="font-bold mb-3 text-2xl">Shop</h3>
-          <ul className="space-y-2 text-2xl">
+          <h3 className="font-bold mb-3 text-2xl md:text-3xl">Shop</h3>
+          <ul className="space-y-2 font-medium text-lg md:text-xl">
             <li><a href="#">Cookies</a></li>
             <li><a href="#">Muesli</a></li>
             <li><a href="#">Granola Bars</a></li>
@@ -46,19 +45,55 @@ const Footer = () => {
 
         {/* Contact */}
         <div>
-          <h3 className="font-bold mb-3 text-2xl">Contact</h3>
-          <p className="flex items-center gap-2 text-2xl"><FaMapMarkerAlt /> No.45, anna salai, T. nagar, chennai - 600 017</p>
-          <p className="flex items-center gap-2 text-2xl"><FaEnvelope /> info@cherii.com</p>
-          <p className="flex items-center gap-2 text-2xl"><FaPhone /> +123 456 7890</p>
+          <h3 className="font-bold mb-3 text-2xl md:text-3xl">Contact</h3>
+          <p className="flex items-start gap-2 font-medium text-lg md:text-xl">
+            <FaMapMarkerAlt className="mt-1" /> 
+            No.45, Anna Salai, T. Nagar, Chennai - 600 017
+          </p>
+          <p className="flex items-center gap-2 font-medium text-lg md:text-xl mt-2">
+            <FaEnvelope /> info@cherii.com
+          </p>
+          <p className="flex items-center gap-2 font-medium text-lg md:text-xl mt-2">
+            <FaPhone /> +123 456 7890
+          </p>
 
-          <h3 className="font-bold mt-4 mb-2 text-2xl">Follow us</h3>
-          <div className="flex gap-4 text-3xl">
-            <a href="#"><FaInstagram /></a>
-            <a href="#"><FaLinkedin /></a>
-            <a href="#"><FaFacebook /></a>
-            <a href="#"><FaYoutube /></a>
+          <h3 className="font-bold mt-6 mb-2 text-2xl md:text-3xl">Follow us</h3>
+          <div className="flex gap-4 text-2xl md:text-3xl">
+            <a 
+              href="https://www.instagram.com/cherii" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <FaInstagram />
+            </a>
+            <a 
+              href="https://www.linkedin.com/company/cherii" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <FaLinkedin />
+            </a>
+            <a 
+              href="https://www.facebook.com/cherii" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <FaFacebook />
+            </a>
+            <a 
+              href="https://www.youtube.com/@cherii" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <FaYoutube />
+            </a>
           </div>
         </div>
+      </div>
+
+      {/* Bottom Bar */}
+      <div className="border-t border-gray-400 mt-10 pt-4 text-center text-gray-800 text-sm md:text-base">
+        © {new Date().getFullYear()} <span className="font-bold">Cherii</span>. All rights reserved.
       </div>
     </footer>
   );
